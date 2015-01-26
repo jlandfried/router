@@ -1,0 +1,20 @@
+{
+  "name": "jlandfried/router",
+  "description": "PHP Router",
+  "keywords": ["routing", "router"],
+  "license": "GPL v2",
+  "authors": [
+    {
+      "name": "Jeff Landfried",
+      "email": "jlandfri@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Router\\": "src/"
+    }
+  }
+}
