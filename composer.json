@@ -12,9 +12,17 @@
   "require": {
     "php": ">=5.4.0"
   },
+  "require-dev": {
+    "phpunit/phpunit" : "~4.0"
+  },
   "autoload": {
     "psr-4": {
-      "Router\\": "src/"
+      "jiff\\Router\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "jiff\\Router\\Test\\": "test"
     }
   }
 }
