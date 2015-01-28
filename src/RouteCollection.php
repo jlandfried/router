@@ -1,41 +1,41 @@
 <?php
-namespace jiff\Router;
+namespace jlandfried\Router;
 
-use SplObjectStorage;
-use jiff\Router\Exception\BadRouteMethodException;
+class RouteCollection implements RouteCollectionInterface {
+    private $method_route_map;
 
-class RouteCollection extends SplObjectStorage implements RouteCollectionInterface {
-  /**
-   * Accepted HTTP methods for this route
-   * @var array
-   */
-  private $methods = array('GET', 'POST', 'PUT', 'DELETE');
-
-  /**
-   * {@inheritdoc}
-   */
-  public function add($method, $callable, $id = NULL) {
-    if ($id == NULL) {
-      $id = $callable;
+    public function __construct() {
+        $this->method_route_map = [];
     }
 
-    if (in_array($method, $this->methods)) {
-      $this->attach($method, $id, $callable);
+    /**
+     * {@inheritdoc}
+    */
+    public function add(RouteInterface $route) {
+        $methods = $route->getMethods();
+        foreach ($methods as $method) {
+            $this->addMethodRoute($method, $route);
+        }
     }
-    else {
-     throw new BadRouteMethodException($method);
+
+    /**
+    * {@inheritdoc}
+    */
+    public function getRoute($method, $pattern) {
+        if (isset($this->method_route_map[$method][$pattern])) {
+            return $this->method_route_map[$method][$pattern];
+        }
+        throw new \Exception("Pattern '$pattern' doesn't match any defined '$method' routes.");
     }
 
-    $this->attach($method, $id, $callable);
-  }
-
-
-
-  /**
-   * {@inheritdoc}
-   */
-  public function remove($name) {
-    return 'testRemove';
-  }
-
+    /**
+     * Add a route to the method-sorted collection.
+     *
+     * @param string $method
+     * @param string $method
+     * @param RouteInterface $route
+     */
+    protected function addMethodRoute($method, RouteInterface $route) {
+        $this->method_route_map[strtolower($method)][$route->getPattern()] = $route;
+    }
 }

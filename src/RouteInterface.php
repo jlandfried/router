@@ -1,6 +1,6 @@
 <?php
 
-namespace jiff\Router;
+namespace jlandfried\Router;
 
 interface RouteInterface {
   /**
@@ -13,4 +13,11 @@ interface RouteInterface {
    *   is matched.
    */
   public function __construct($methods, $pattern, $handler);
+
+  /**
+   * Get an array of allowed methods.
+   *
+   * @return array
+   */
+  public function getMethods();
 }

@@ -1,7 +1,7 @@
 <?php
-namespace jiff\Router\Test;
+namespace jlandfried\Router\Test;
 
-use jiff\Router\Route;
+use jlandfried\Router\Route;
 use PHPUnit_Framework_TestCase;
 
 /**

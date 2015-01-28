@@ -17,12 +17,12 @@
   },
   "autoload": {
     "psr-4": {
-      "jiff\\Router\\": "src"
+      "jlandfried\\Router\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "jiff\\Router\\Test\\": "test"
+      "jlandfried\\Router\\Test\\": "test"
     }
   }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace jiff\Router;
+namespace jlandfried\Router;
 
 class Route implements RouteInterface {
   protected $methods;
@@ -24,10 +24,7 @@ class Route implements RouteInterface {
     return $this->methods;
   }
 
-  /**
-   * @param $method
-   */
-  public function matchMethod($method) {
-
+  public function getPattern() {
+    return $this->pattern;
   }
 }

@@ -1,24 +1,22 @@
 <?php
-namespace jiff\Router;
+namespace jlandfried\Router;
 
 interface RouteCollectionInterface {
 
   /**
    * Add a route to the list.
    *
-   * @param string $method
-   * @param $callable
-   * @param null $id
-   * @return mixed
+   * @param RouteInterface $route
    */
-  public function add($method, $callable, $id = NULL);
+  public function add(RouteInterface $route);
 
   /**
-   * Remove a route from the list.
+   * Get a route from storage.
    *
-   * @param $name
+   * @param string $method
+   * @param string $pattern
    * @return mixed
+   * @throws \Exception
    */
-  public function remove($name);
-
+  public function getRoute($method, $pattern);
 }
