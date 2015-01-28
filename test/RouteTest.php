@@ -12,8 +12,8 @@ class RouteTest extends PHPUnit_Framework_TestCase {
     private $routeWithMultipleMethods;
 
     public function setUp() {
-        $this->routeWithSingleMethod = new Route(['GET'], 'home', 'some--route--handler');
-        $this->routeWithMultipleMethods = new Route(['GET', 'post'], 'home', 'some--route--handler');
+        $this->routeWithSingleMethod = new Route(['GET'], 'home', 'some--route--handler', 'route_with_single_method');
+        $this->routeWithMultipleMethods = new Route(['GET', 'post'], 'home', 'some--route--handler', 'route_with_multiple_methods');
     }
 
     /**
@@ -30,5 +30,23 @@ class RouteTest extends PHPUnit_Framework_TestCase {
     public function testMultipleMethodstorage() {
         $methods = $this->routeWithMultipleMethods->getMethods();
         $this->assertEquals(['get', 'post'], $methods);
+    }
+
+    /**
+     * Routes can have strings for names which can be accessed.
+     */
+    public function testRouteWithName() {
+        $name = $this->routeWithSingleMethod->getName();
+        $this->assertEquals('route_with_single_method', $name);
+    }
+
+    /**
+     * Routes can not have non-null non-string values assigned to a name.
+     *
+     * @expectedException \Exception
+     * @expectedExceptionMessage Named routes must use a string for their name.
+     */
+    public function testRouteWithNonStringName() {
+        new Route('get', 'test', 'handler', ['array_name']);
     }
 }

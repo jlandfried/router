@@ -18,4 +18,14 @@ interface RouteCollectionInterface {
      * @throws \Exception
      */
     public function getRoute($method, $pattern);
+
+    /**
+     * Retrieve a route by its name
+     *
+     * @param $name
+     * @param $method
+     * @return RouteInterface
+     * @throws \Exception
+     */
+    public function getNamedRoute($name, $method);
 }

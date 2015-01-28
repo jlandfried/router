@@ -15,8 +15,8 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
         $this->router = new RouteCollection();
-        $this->singleMethodRoute = new Route('get', 'home', 'some--handler');
-        $this->multiMethodRoute = new Route(['get', 'post'], 'home', 'some--other--handler');
+        $this->singleMethodRoute = new Route('get', 'home', 'some--handler', 'single.method.route');
+        $this->multiMethodRoute = new Route(['get', 'post'], 'home', 'some--other--handler', 'multiple.method.route');
     }
 
     /**
@@ -63,5 +63,38 @@ class RouterTest extends PHPUnit_Framework_TestCase {
     public function testIncorrectMultiMethodLookup() {
         $this->router->add($this->singleMethodRoute);
         $this->router->getRoute('patch', 'home');
+    }
+
+    /**
+     * Routes should be able to be looked up by their name property if it exists.
+     */
+    public function testValidNamedRouteLookup() {
+        $this->router->add($this->singleMethodRoute);
+        $named_route = $this->router->getNamedRoute('single.method.route', 'get');
+        $this->assertEquals($this->singleMethodRoute, $named_route);
+    }
+
+    /**
+     * Looking up a named route that does not exist should throw an exception.
+     *
+     * @expectedException \Exception
+     * @expectedExceptionMessage No route with name 'fake.route.name' and method 'get' exists.
+     */
+    public function testInvalidNamedRouteLookup() {
+        $this->router->add($this->singleMethodRoute);
+        $named_route = $this->router->getNamedRoute('fake.route.name', 'get');
+        $this->assertEquals($this->singleMethodRoute, $named_route);
+    }
+
+    /**
+     * Looking up a named route that does not exist should throw an exception.
+     *
+     * @expectedException \Exception
+     * @expectedExceptionMessage No route with name 'single.method.route' and method 'post' exists.
+     */
+    public function testInvalidNamedRouteMethodLookup() {
+        $this->router->add($this->singleMethodRoute);
+        $named_route = $this->router->getNamedRoute('single.method.route', 'post');
+        $this->assertEquals($this->singleMethodRoute, $named_route);
     }
 }

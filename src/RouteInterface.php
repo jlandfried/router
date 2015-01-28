@@ -6,13 +6,15 @@ interface RouteInterface {
     /**
      * @param string|array $methods
      *   The HTTP method(s) that this route can be used for.
-     * @param $pattern
-     *   RegExp defining what paths this route should work with.
-     * @param callable $handler
+     * @param string $pattern
+     *   String defining what paths this route should work with.
+     * @param mixed $handler
      *   An arbitrary value that indicates what should happen when this route
      *   is matched.
+     * @param string $name
+     *   A name that can be used for reverse route look-ups.
      */
-    public function __construct($methods, $pattern, $handler);
+    public function __construct($methods, $pattern, $handler, $name = NULL);
 
     /**
      * Get an array of allowed methods.
@@ -20,4 +22,18 @@ interface RouteInterface {
      * @return array
      */
     public function getMethods();
+
+    /**
+     * Get name of route.
+     *
+     * @return array
+     */
+    public function getName();
+
+    /**
+     * Get the pattern that this route matches.
+     *
+     * @return string
+     */
+    public function getPattern();
 }
