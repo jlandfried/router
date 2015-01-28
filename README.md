@@ -1,1 +1,3 @@
+[![Build Status](https://travis-ci.org/jlandfried/router.svg?branch=master)](https://travis-ci.org/jlandfried/router)
+
 initial readme...
