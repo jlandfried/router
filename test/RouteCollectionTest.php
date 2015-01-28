@@ -16,16 +16,16 @@ class RouterTest extends PHPUnit_Framework_TestCase {
     public function setUp() {
         $this->router = new RouteCollection();
         $this->singleMethodRoute = new Route('get', 'home', 'some--handler');
-        $this->multiMethodRoute = new Route(['get', 'post'], 'home', 'some--handler');
+        $this->multiMethodRoute = new Route(['get', 'post'], 'home', 'some--other--handler');
     }
 
     /**
      * Routes that get added with a single method should be accessible.
      */
     public function testAddSingleMethod() {
-      $this->router->add($this->singleMethodRoute);
-      $route = $this->router->getRoute('get', 'home');
-      $this->assertEquals($this->singleMethodRoute, $route);
+        $this->router->add($this->singleMethodRoute);
+        $route = $this->router->getRoute('get', 'home');
+        $this->assertEquals($this->singleMethodRoute, $route);
     }
 
     /**
@@ -49,8 +49,8 @@ class RouterTest extends PHPUnit_Framework_TestCase {
      * @expectedExceptionMessage Pattern 'home' doesn't match any defined 'post' routes.
      */
     public function testIncorrectSingleMethodLookup() {
-      $this->router->add($this->singleMethodRoute);
-      $this->router->getRoute('post', 'home');
+        $this->router->add($this->singleMethodRoute);
+        $this->router->getRoute('post', 'home');
     }
 
     /**
