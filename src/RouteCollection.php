@@ -48,10 +48,6 @@ class RouteCollection implements RouteCollectionInterface {
         throw new \Exception("No route with name '$name' and method '$method' exists.");
     }
 
-    public function getNamedRoutes() {
-        var_dump($this->named_route_map);
-    }
-
     /**
     * Add a route to the method-sorted collection.
     *
