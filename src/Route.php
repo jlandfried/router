@@ -3,6 +3,8 @@
 namespace jlandfried\Router;
 
 class Route implements RouteInterface {
+    const DELIMITER_REGEX = '#{(.*?)}#';
+
     protected $methods;
     protected $pattern;
     protected $handler;
@@ -20,7 +22,7 @@ class Route implements RouteInterface {
 
         // Extract parameters from route pattern.
         $parameters = [];
-        preg_match_all('#{(.*?)}#', $this->getPattern(), $parameters);
+        preg_match_all(self::DELIMITER_REGEX, $this->getPattern(), $parameters);
         $this->parameters = $parameters;
 
         if (!is_null($name) && !is_string($name)) {
@@ -61,33 +63,49 @@ class Route implements RouteInterface {
      * {@inheritdoc}
      */
     public function match($uri) {
-        $pattern = $this->getPattern();
-        if ($uri == $pattern) { return true; }
-
         // Break out the static portions of the pattern.
-        $static_portions = preg_split('#{(.*?)}#', $pattern);
-        if (count($static_portions) == 1) { return false; }
+        $static_portions = $this->getStaticPatternParts();
 
-        $variables = [];
-        foreach($static_portions as $key => $portion) {
-            $parts = $portion != '' ? explode($portion, $uri) : ['',$uri];
-            try {
+        if (count($static_portions) === 1) {
+            return $this->matchStaticPattern($uri);
+        }
+
+        // Array index exceptions indicate that a route does not match.
+        try {
+            $variables = [];
+            foreach ($static_portions as $key => $portion) {
+                $parts = $portion != '' ? explode($portion, $uri) : ['', $uri];
                 if (isset($static_portions[$key + 1]) && $next_portion = $static_portions[$key + 1]) {
                     $variables[] = substr($parts[1], 0, strpos($parts[1], $next_portion));
                 }
-
                 // If the variable is at the end.
                 elseif (count($parts) === 2 && $parts[1] != '') {
                     $variables[] = $parts[1];
                 }
             }
-            catch (\Exception $e) {
-                return false;
-            }
+            return str_replace($variables, '', $uri) === preg_replace(self::DELIMITER_REGEX, '', $this->getPattern());
         }
+        catch (\Exception $e) {
+            return false;
+        }
+    }
 
-        $static_uri_text = str_replace($variables, '', $uri);
-        $static_pattern_text = preg_replace('#{(.*?)}#', '', $pattern);
-        return $static_pattern_text === $static_uri_text;
+    /**
+     * Get parts of a pattern that are not variables.
+     *
+     * @return array
+     */
+    protected function getStaticPatternParts() {
+        return preg_split(self::DELIMITER_REGEX, $this->getPattern());
+    }
+
+    /**
+     * Check if a uri matches the pattern.
+     *
+     * @param $uri
+     * @return bool
+     */
+    protected function matchStaticPattern($uri) {
+        return $uri === $this->getPattern();
     }
 }

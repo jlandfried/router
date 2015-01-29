@@ -77,6 +77,25 @@ class RouteTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
+     * Static pattern valid match.
+     */
+    public function testStaticPatternValidMatch() {
+        $pattern = 'static/pattern';
+        $route = new Route('get', $pattern, 'fake-handler');
+        $this->assertEquals(true, $route->match($pattern));
+    }
+
+    /**
+     * Static pattern invalid match.
+     */
+    public function testStaticPatternInvalidMatch() {
+        $pattern = 'static/pattern';
+        $uri = 'other/pattern';
+        $route = new Route('get', $pattern, 'fake-handler');
+        $this->assertEquals(false, $route->match($uri));
+    }
+
+    /**
      * A provided uri can match a route with variables.
      */
     public function testRouteWithParameterMatches() {
