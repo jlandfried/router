@@ -69,25 +69,7 @@ class Route implements RouteInterface {
         if (count($static_portions) === 1) {
             return $this->matchStaticPattern($uri);
         }
-
-        // Array index exceptions indicate that a route does not match.
-        try {
-            $variables = [];
-            foreach ($static_portions as $key => $portion) {
-                $parts = $portion != '' ? explode($portion, $uri) : ['', $uri];
-                if (isset($static_portions[$key + 1]) && $next_portion = $static_portions[$key + 1]) {
-                    $variables[] = substr($parts[1], 0, strpos($parts[1], $next_portion));
-                }
-                // If the variable is at the end.
-                elseif (count($parts) === 2 && $parts[1] != '') {
-                    $variables[] = $parts[1];
-                }
-            }
-            return str_replace($variables, '', $uri) === preg_replace(self::DELIMITER_REGEX, '', $this->getPattern());
-        }
-        catch (\Exception $e) {
-            return false;
-        }
+        return $this->matchDynamicPattern($uri, $static_portions);
     }
 
     /**
@@ -107,5 +89,33 @@ class Route implements RouteInterface {
      */
     protected function matchStaticPattern($uri) {
         return $uri === $this->getPattern();
+    }
+
+    /**
+     * Check if a provided uri matches a pre-split dynamic uri.
+     *
+     * @param string $uri
+     * @param array $static_portions
+     * @return bool
+     */
+    protected function matchDynamicPattern($uri, array $static_portions) {
+        // Array index exceptions indicate that a route does not match.
+        try {
+            $variables = [];
+            foreach ($static_portions as $key => $portion) {
+                $parts = $portion != '' ? explode($portion, $uri) : ['', $uri];
+                if (isset($static_portions[$key + 1]) && $next_portion = $static_portions[$key + 1]) {
+                    $variables[] = substr($parts[1], 0, strpos($parts[1], $next_portion));
+                }
+                // If the variable is at the end.
+                elseif (count($parts) === 2 && $parts[1] != '') {
+                    $variables[] = $parts[1];
+                }
+            }
+            return str_replace($variables, '', $uri) === implode($static_portions);
+        }
+        catch (\Exception $e) {
+            return false;
+        }
     }
 }
