@@ -29,7 +29,7 @@ class RouteMatcher implements RouteMatcherInterface {
         if (count($static_portions) === 1) {
             return $this->matchStaticPattern($this->uri);
         }
-        return $this->matchDynamicPattern($this->uri, $static_portions);
+        return $this->matchDynamicPattern($static_portions);
     }
 
     /**
@@ -51,14 +51,13 @@ class RouteMatcher implements RouteMatcherInterface {
     /**
      * Check if a provided uri matches a pre-split dynamic uri.
      *
-     * @param string $uri
      * @param array $static_portions
      * @return bool
      */
-    protected function matchDynamicPattern($uri, array $static_portions) {
+    protected function matchDynamicPattern(array $static_portions) {
         $variables = [];
         foreach ($static_portions as $key => $portion) {
-            $parts = $portion != '' ? explode($portion, $uri) : ['', $uri];
+            $parts = $portion != '' ? explode($portion, $this->uri) : ['', $this->uri];
             if (!isset($parts[1])) {
                 return false;
             }
@@ -70,7 +69,7 @@ class RouteMatcher implements RouteMatcherInterface {
                 $variables[] = $parts[1];
             }
         }
-        return str_replace($variables, '', $uri) === implode($static_portions);
+        return str_replace($variables, '', $this->uri) === implode($static_portions);
     }
 
     /**
