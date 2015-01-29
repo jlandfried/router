@@ -99,23 +99,20 @@ class Route implements RouteInterface {
      * @return bool
      */
     protected function matchDynamicPattern($uri, array $static_portions) {
-        // Array index exceptions indicate that a route does not match.
-        try {
-            $variables = [];
-            foreach ($static_portions as $key => $portion) {
-                $parts = $portion != '' ? explode($portion, $uri) : ['', $uri];
-                if (isset($static_portions[$key + 1]) && $next_portion = $static_portions[$key + 1]) {
-                    $variables[] = substr($parts[1], 0, strpos($parts[1], $next_portion));
-                }
-                // If the variable is at the end.
-                elseif (count($parts) === 2 && $parts[1] != '') {
-                    $variables[] = $parts[1];
-                }
+        $variables = [];
+        foreach ($static_portions as $key => $portion) {
+            $parts = $portion != '' ? explode($portion, $uri) : ['', $uri];
+            if (!isset($parts[1])) {
+                return false;
             }
-            return str_replace($variables, '', $uri) === implode($static_portions);
+            elseif (isset($static_portions[$key + 1]) && $next_portion = $static_portions[$key + 1]) {
+                $variables[] = substr($parts[1], 0, strpos($parts[1], $next_portion));
+            }
+            // If the variable is at the end.
+            elseif (count($parts) === 2 && $parts[1] != '') {
+                $variables[] = $parts[1];
+            }
         }
-        catch (\Exception $e) {
-            return false;
-        }
+        return str_replace($variables, '', $uri) === implode($static_portions);
     }
 }
