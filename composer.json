@@ -2,7 +2,7 @@
   "name": "jlandfried/router",
   "description": "PHP Router",
   "keywords": ["routing", "router"],
-  "license": "GPL v2",
+  "license": "MIT",
   "authors": [
     {
       "name": "Jeff Landfried",
