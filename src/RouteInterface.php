@@ -36,19 +36,4 @@ interface RouteInterface {
      * @return string
      */
     public function getPattern();
-
-    /**
-     * Get parameters from a route path.
-     *
-     * @param bool $with_delimiter
-     */
-    public function getParameters($with_delimiter = FALSE);
-
-    /**
-     * Check if a a provided uri matches the route pattern.
-     *
-     * @param string $uri
-     * @return bool
-     */
-    public function match($uri);
 }
