@@ -99,23 +99,44 @@ class Route implements RouteInterface {
      * @return bool
      */
     protected function matchDynamicPattern($uri, array $static_portions) {
-        // Array index exceptions indicate that a route does not match.
-        try {
-            $variables = [];
-            foreach ($static_portions as $key => $portion) {
-                $parts = $portion != '' ? explode($portion, $uri) : ['', $uri];
-                if (isset($static_portions[$key + 1]) && $next_portion = $static_portions[$key + 1]) {
-                    $variables[] = substr($parts[1], 0, strpos($parts[1], $next_portion));
-                }
-                // If the variable is at the end.
-                elseif (count($parts) === 2 && $parts[1] != '') {
-                    $variables[] = $parts[1];
-                }
+        $variables = [];
+        foreach ($static_portions as $key => $portion) {
+            $parts = $portion != '' ? explode($portion, $uri) : ['', $uri];
+            if (!isset($parts[1])) {
+                return false;
             }
-            return str_replace($variables, '', $uri) === implode($static_portions);
+            elseif ($next_portion = $this->getNextPatternPortion($static_portions, $key)) {
+                $variables[] = substr($parts[1], 0, strpos($parts[1], $next_portion));
+            }
+            // If the variable is at the end.
+            elseif ($this->analyzingEnd($parts)) {
+                $variables[] = $parts[1];
+            }
         }
-        catch (\Exception $e) {
-            return false;
+        return str_replace($variables, '', $uri) === implode($static_portions);
+    }
+
+    /**
+     * Check to see if there are two portions of a pattern that can be compared.
+     *
+     * @param $portions
+     * @param $key
+     * @return null
+     */
+    protected function getNextPatternPortion($portions, $key) {
+        if (isset($portions[$key + 1]) && $next_portion = $portions[$key + 1]) {
+            return $next_portion;
         }
+        return NULL;
+    }
+
+    /**
+     * Check if analyzing end of a pattern.
+     *
+     * @param $pattern_parts
+     * @return bool
+     */
+    protected function analyzingEnd($pattern_parts) {
+        return count($pattern_parts) === 2 && $pattern_parts[1] != '';
     }
 }
