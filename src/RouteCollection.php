@@ -10,6 +10,21 @@ class RouteCollection implements RouteCollectionInterface {
         $this->named_route_map = [];
     }
 
+    public function getCurrentRoute($method, $uri) {
+        $current_route = null;
+        if (isset($this->method_route_map[$method])) {
+            foreach ($this->method_route_map[$method] as $route) {
+                $matcher = $this->getRouteMatcher($route, $uri);
+                if ($matcher->match()) {
+                    $current_route = $route;
+                    break;
+                }
+            }
+        }
+        if ($current_route) return $current_route;
+        throw new \Exception("Pattern '$uri' doesn't match any defined '$method' routes.");
+    }
+
     /**
      * {@inheritdoc}
     */
@@ -25,16 +40,6 @@ class RouteCollection implements RouteCollectionInterface {
                 $this->addNamedRoute($name, $method, $route);
             }
         }
-    }
-
-    /**
-    * {@inheritdoc}
-    */
-    public function getRoute($method, $pattern) {
-        if (isset($this->method_route_map[$method][$pattern])) {
-            return $this->method_route_map[$method][$pattern];
-        }
-        throw new \Exception("Pattern '$pattern' doesn't match any defined '$method' routes.");
     }
 
     /**
@@ -56,7 +61,7 @@ class RouteCollection implements RouteCollectionInterface {
     */
     protected function addMethodRoute($method, RouteInterface $route) {
         $method = strtolower($method);
-        $this->method_route_map[$method][$route->getPattern()] = $route;
+        $this->method_route_map[$method][] = $route;
     }
 
     /**
@@ -69,5 +74,9 @@ class RouteCollection implements RouteCollectionInterface {
     protected function addNamedRoute($name, $method, RouteInterface $route) {
         $method = strtolower($method);
         $this->named_route_map[$name][$method] = $route;
+    }
+
+    protected function getRouteMatcher(RouteInterface $route, $uri) {
+        return new RouteMatcher($route, $uri);
     }
 }

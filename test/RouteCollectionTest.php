@@ -24,7 +24,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
      */
     public function testAddSingleMethod() {
         $this->router->add($this->singleMethodRoute);
-        $route = $this->router->getRoute('get', 'home');
+        $route = $this->router->getCurrentRoute('get', 'home');
         $this->assertEquals($this->singleMethodRoute, $route);
     }
 
@@ -37,7 +37,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
         $router = $this->router;
         $this->router->add($route);
         foreach ($route->getMethods() as $method) {
-            $this->assertEquals($route, $router->getRoute($method, $route->getPattern()));
+            $this->assertEquals($route, $router->getCurrentRoute($method, $route->getPattern()));
         }
     }
 
@@ -50,7 +50,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
      */
     public function testIncorrectSingleMethodLookup() {
         $this->router->add($this->singleMethodRoute);
-        $this->router->getRoute('post', 'home');
+        $this->router->getCurrentRoute('post', 'home');
     }
 
     /**
@@ -62,7 +62,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
      */
     public function testIncorrectMultiMethodLookup() {
         $this->router->add($this->singleMethodRoute);
-        $this->router->getRoute('patch', 'home');
+        $this->router->getCurrentRoute('patch', 'home');
     }
 
     /**
