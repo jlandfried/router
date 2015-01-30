@@ -75,6 +75,12 @@ class RouteCollection implements RouteCollectionInterface {
         $this->named_route_map[$name][$method] = $route;
     }
 
+    /**
+     * Get routes using a certain method.
+     *
+     * @param string $method
+     * @return array
+     */
     protected function getMethodRoutes($method) {
         if (isset($this->method_route_map[$method])) {
             return $this->method_route_map[$method];
