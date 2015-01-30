@@ -27,7 +27,7 @@ class RouteMatcher implements RouteMatcherInterface {
         $static_portions = $this->getStaticPatternParts();
 
         if (count($static_portions) === 1) {
-            return $this->matchStaticPattern($this->uri);
+            return $this->matchStaticPattern();
         }
         return $this->matchDynamicPattern($static_portions);
     }
