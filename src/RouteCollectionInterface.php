@@ -10,6 +10,14 @@ interface RouteCollectionInterface {
     public function add(RouteInterface $route);
 
     /**
+     * Get routes using a certain method.
+     *
+     * @param string $method
+     * @return array
+     */
+    public function getMethodRoutes($method);
+
+    /**
      * Retrieve a route by its name
      *
      * @param $name
@@ -18,10 +26,4 @@ interface RouteCollectionInterface {
      * @throws \Exception
      */
     public function getNamedRoute($name, $method);
-
-    /**
-     * @param $method
-     * @return array
-     */
-    public function getMethodRoutes($method);
 }

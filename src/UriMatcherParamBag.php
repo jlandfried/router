@@ -18,11 +18,7 @@ class UriMatcherParamBag implements RouteMatcherParamBagInterface {
     }
 
     /**
-     * Generic getter.
-     *
-     * @param $param
-     * @return mixed
-     * @throws \Exception
+     * {@inheritdoc}
      */
     public function get($param) {
         if (!isset($this->{$param})) {

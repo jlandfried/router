@@ -29,10 +29,35 @@ class UriMatcher implements RouteMatcherInterface {
         return false;
     }
 
+    /**
+     * @param RouteInterface $route
+     * @param bool $with_delimiter
+     *
+     * @returns array
+     */
+    public function getParams(RouteInterface $route, $with_delimiter = FALSE) {
+        $parameters = [];
+        preg_match_all(self::DELIMITER_REGEX, $route->getPattern(), $parameters);
+        return $with_delimiter ? $parameters[0] : $parameters[1];
+    }
+
+    /**
+     * Get static portions of pattern.
+     *
+     * @param RouteInterface $route
+     * @return array
+     */
     protected function getStaticPortions(RouteInterface $route) {
         return preg_split(self::DELIMITER_REGEX, $route->getPattern());
     }
 
+    /**
+     * Match provided uri against dynamic pattern.
+     *
+     * @param RouteInterface $route
+     * @param string $uri
+     * @return bool
+     */
     protected function matchDynamicPattern(RouteInterface $route, $uri) {
         $static_portions = $this->getStaticPortions($route);
         $variables = [];
@@ -75,20 +100,12 @@ class UriMatcher implements RouteMatcherInterface {
         return NULL;
     }
 
-
-    protected function matchStaticPattern(RouteInterface $route, $uri) {
-        return $route->getPattern() === $uri;
-    }
-
     /**
      * @param RouteInterface $route
-     * @param bool $with_delimiter
-     *
-     * @returns array
+     * @param $uri
+     * @return bool
      */
-    public function getParams(RouteInterface $route, $with_delimiter = FALSE) {
-        $parameters = [];
-        preg_match_all(self::DELIMITER_REGEX, $route->getPattern(), $parameters);
-        return $with_delimiter ? $parameters[0] : $parameters[1];
+    protected function matchStaticPattern(RouteInterface $route, $uri) {
+        return $route->getPattern() === $uri;
     }
 }

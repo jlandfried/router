@@ -30,6 +30,16 @@ class RouteCollection implements RouteCollectionInterface {
     /**
      * {@inheritdoc}
      */
+    public function getMethodRoutes($method) {
+        if (isset($this->method_route_map[$method])) {
+            return $this->method_route_map[$method];
+        }
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getNamedRoute($name, $method) {
         $method = strtolower($method);
         if (isset($this->named_route_map[$name][$method])) {
@@ -59,18 +69,5 @@ class RouteCollection implements RouteCollectionInterface {
     protected function addNamedRoute($name, $method, RouteInterface $route) {
         $method = strtolower($method);
         $this->named_route_map[$name][$method] = $route;
-    }
-
-    /**
-     * Get routes using a certain method.
-     *
-     * @param string $method
-     * @return array
-     */
-    public function getMethodRoutes($method) {
-        if (isset($this->method_route_map[$method])) {
-            return $this->method_route_map[$method];
-        }
-        return [];
     }
 }
