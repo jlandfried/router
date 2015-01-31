@@ -10,16 +10,6 @@ interface RouteCollectionInterface {
     public function add(RouteInterface $route);
 
     /**
-     * Search stored routes and return one that matches the current request.
-     *
-     * @param string $method
-     * @param string $uri
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getCurrentRoute($method, $uri);
-
-    /**
      * Retrieve a route by its name
      *
      * @param $name
@@ -28,4 +18,10 @@ interface RouteCollectionInterface {
      * @throws \Exception
      */
     public function getNamedRoute($name, $method);
+
+    /**
+     * @param $method
+     * @return array
+     */
+    public function getMethodRoutes($method);
 }

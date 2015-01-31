@@ -12,20 +12,6 @@ class RouteCollection implements RouteCollectionInterface {
 
     /**
      * {@inheritdoc}
-     */
-    public function getCurrentRoute($method, $uri) {
-        $method_routes = $this->getMethodRoutes($method);
-        foreach ($method_routes as $route) {
-            $matcher = $this->getRouteMatcher($route, $uri);
-            if ($matcher->match()) {
-                return $route;
-            }
-        }
-        throw new \Exception("Pattern '$uri' doesn't match any defined '$method' routes.");
-    }
-
-    /**
-     * {@inheritdoc}
     */
     public function add(RouteInterface $route) {
         $methods = $route->getMethods();
@@ -81,21 +67,10 @@ class RouteCollection implements RouteCollectionInterface {
      * @param string $method
      * @return array
      */
-    protected function getMethodRoutes($method) {
+    public function getMethodRoutes($method) {
         if (isset($this->method_route_map[$method])) {
             return $this->method_route_map[$method];
         }
         return [];
-    }
-
-    /**
-     * Get a RouteMatcher.
-     *
-     * @param \jlandfried\Router\RouteInterface $route
-     * @param $uri
-     * @return \jlandfried\Router\RouteMatcher
-     */
-    protected function getRouteMatcher(RouteInterface $route, $uri) {
-        return new RouteMatcher($route, $uri);
     }
 }
