@@ -12,7 +12,7 @@ interface RouteMatcherInterface {
     public function match(RouteMatcherParamBagInterface $params);
 
     /**
-     * @param RouteInterface $route;
+     * @param RouteInterface $route
      * @param bool $with_delimiter
      *
      * @returns array
